@@ -14,15 +14,16 @@ import reader.ReadExcelFile;
  * @author doduy
  */
 public class Reader {
-    ReadWordFile wordReader = new ReadWordFile("C:\\Users\\doduy\\Downloads\\Seminar_08.docx");
-    
+    public static void main(String[] args) {
+        // ReadWordFile wordReader = new ReadWordFile("C:\\Users\\doduy\\Downloads\\Seminar_08.docx");
 
-    //ReadExcelFile excelReader = new ReadExcelFile("C:\\Users\\doduy\\Downloads\\Customer.xlsx");
-    //excelReader.print();
-    //excelReader.writePictures();
-    //excelReader.write();
+        //ReadExcelFile excelReader = new ReadExcelFile("C:\\Users\\doduy\\Downloads\\Customer.xlsx");
+        //excelReader.print();
+        //excelReader.writePictures();
+        //excelReader.write();
 
-    // ReadPdfFile pdfReader = new ReadPdfFile("C:\\Users\\doduy\\Downloads\\Lab01.pdf"); // ĐƯờng dẫn được copy từ windows explorer
-    // pdfReader.writePictures(); // Lưu ảnh từ pdf
-    // pdfReader.write(); 
+        ReadPdfFile pdfReader = new ReadPdfFile("C:\\Users\\doduy\\Downloads\\Documents\\Seminar_08.pdf"); // ĐƯờng dẫn được copy từ windows explorer
+        // pdfReader.writePictures(); // Lưu ảnh từ pdf
+        pdfReader.write();
+    }
 }

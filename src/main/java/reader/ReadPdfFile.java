@@ -43,7 +43,7 @@ public class ReadPdfFile {
     public ReadPdfFile(String path) {
         BasicConfigurator.configure();
         
-        this.filename = path.substring(path.lastIndexOf('\\') + 1, path.length());
+        filename = path.substring(path.lastIndexOf('\\') + 1, path.length());
         foldername = filename.substring(0, filename.lastIndexOf('.'));
         
         // Tạo đối tượng ghi/đọc file nội dung Workbook
@@ -83,7 +83,7 @@ public class ReadPdfFile {
             try (BufferedWriter bw = 
                     new BufferedWriter(
                             new OutputStreamWriter(
-                                    new FileOutputStream(wfile.getPath() + "\\" + foldername + ".txt")))) {
+                                    new FileOutputStream(wfile.getPath() + "\\" + foldername + ".txt"), "UTF-8"))) {
                 // stripper.writeText(pdf, bw); ~NOT WORKING~
                 bw.write(content);
             }
@@ -140,8 +140,8 @@ public class ReadPdfFile {
                     
                     if (o instanceof PDImageXObject) {
                         PDImageXObject image = (PDImageXObject)o;
-                        String filename = pfile.getPath() + "\\img-" + i + ".png";
-                        ImageIO.write(image.getImage(), "png", new File(filename));
+                        String picfilename = pfile.getPath() + "\\img-" + i + ".png";
+                        ImageIO.write(image.getImage(), "png", new File(picfilename));
                         i++;
                     }
                 } catch (IOException ex) {
