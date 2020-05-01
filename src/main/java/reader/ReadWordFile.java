@@ -6,12 +6,14 @@
 package reader;
 
 import java.awt.Desktop;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.UUID;
 import org.apache.poi.hwpf.HWPFDocument;
@@ -37,7 +39,7 @@ public class ReadWordFile {
     // file pictures
     private static File pfile;
     // file document
-    private static File document;
+    private static File wfile;
     // Container of document text
     private static String content;
     // Create Input Stream
@@ -52,8 +54,8 @@ public class ReadWordFile {
     private static List<Picture> pictures;
     // List of pictures
     private static List<XWPFPictureData> xpictures;
-    // Write file output
-    private static File output;
+    // name of folder
+    private static String foldername;
     
     /**
      * Constructor for creating: read file, picture file & create folder
@@ -62,20 +64,20 @@ public class ReadWordFile {
     public ReadWordFile(String path) {
         
         this.filename = path.substring(path.lastIndexOf('\\') + 1, path.length());
-        String foldername = filename.substring(0, filename.lastIndexOf('.'));
+        foldername = filename.substring(0, filename.lastIndexOf('.'));
         
         // Tạo đối tượng ghi/đọc file nội dung Workbook
         this.rfile = new File(path);
-        this.document = new File(PATH + foldername + "\\documents\\"); 
+        this.wfile = new File(PATH + foldername + "\\documents\\"); 
         this.pfile = new File(PATH + foldername + "\\images\\");
         
         // Tạo thư mục lưu các file ảnh
         if(!pfile.exists()) {
             pfile.mkdirs();
         }
-        // Tạo thư mục lưu các sheet của workbook
-        if(!document.exists()) {
-            document.mkdirs();
+        // Tạo thư mục lưu văn bản
+        if(!wfile.exists()) {
+            wfile.mkdirs();
         }
         
         readWordDoc();
@@ -172,18 +174,21 @@ public class ReadWordFile {
     public void write() {        
         
         if (doc!=null) {
-            
-            // content = doc.getDocumentText();
-            
-            
+            content = doc.getDocumentText();
         } else if (docx!=null) {
-
             extractor = new XWPFWordExtractor(docx);
             content = extractor.getText();
-            
-            
         } else {
             System.out.println("CHƯA ĐỌC FILE!!!");
+        }
+        
+        try (BufferedWriter bw = 
+            new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(wfile.getPath() + "\\" + foldername + ".txt"), "UTF-8"))) {
+            bw.write(content);
+        } catch (IOException ex) {
+            System.out.println("LOAD FILE THẤT BẠI");
         }
     }
     
@@ -235,20 +240,6 @@ public class ReadWordFile {
         } else {
             System.out.println("BẠN CHƯA ĐỌC FILE!!!");
         }
-    }
-    
-    public void info() {
-        
-        
-//        List<XWPFParagraph> paragraphs = docx.getParagraphs();
-//        for(XWPFParagraph para : paragraphs) {
-//            
-//            for(XWPFRun run : para.getRuns()) {
-//                System.out.println(run.getFontFamily());
-//            }
-//            
-//            System.out.println("");
-//        }
     }
     
     /**

@@ -153,14 +153,6 @@ public class ReadPdfFile {
     }
     
     /**
-     * Hiển thị thông tin PDF
-     */
-    public void info() {
-        
-        System.out.println("Số trang PDF: " + pdf.getNumberOfPages());
-    }
-    
-    /**
      * Open Directory contains documents
      */
     public void open() {
