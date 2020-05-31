@@ -6,10 +6,12 @@
 package reader;
 
 import java.awt.Desktop;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +37,7 @@ public class ReadExcelFile {
     // file pictures
     private static File pfile;
     // file document
-    private static File document;
+    private static File wfile;
     // Create Input Stream
     private static FileInputStream excelFile = null;
     // Wordbook for excel (for open file)
@@ -56,7 +58,7 @@ public class ReadExcelFile {
         
         // Tạo đối tượng ghi/đọc file nội dung Workbook
         this.rfile = new File(path);
-        this.document = new File(PATH + foldername + "\\documents\\"); 
+        this.wfile = new File(PATH + foldername + "\\documents\\"); 
         this.pfile = new File(PATH + foldername + "\\images\\");
         
         // Tạo thư mục lưu các file ảnh
@@ -64,8 +66,8 @@ public class ReadExcelFile {
             pfile.mkdirs();
         }
         // Tạo thư mục lưu các sheet của workbook
-        if(!document.exists()) {
-            document.mkdirs();
+        if(!wfile.exists()) {
+            wfile.mkdirs();
         }
         
         readWorkbook();
@@ -130,7 +132,10 @@ public class ReadExcelFile {
                 
                 sheetName = workbook.getSheetName(sheetIdx);
                 
-                try (FileOutputStream out = new FileOutputStream(document.getPath() + "\\" + sheetName + ".txt")) {
+                try (BufferedWriter bw = 
+                        new BufferedWriter(
+                                new OutputStreamWriter(
+                                        new FileOutputStream(wfile.getPath() + "\\" + sheetName + ".txt"), "UTF-8"))) {
                     //System.out.println("Sheet Name: " + workbook.getSheetName(sheetIdx));
                     datatypeSheet =  workbook.getSheetAt(sheetIdx);
 
@@ -139,7 +144,6 @@ public class ReadExcelFile {
 
                     // Write header to file
                     // Row header = iterator.next();
-                    
                     while(iterator.hasNext()) {
                         Row currentRow = iterator.next();
 
@@ -152,28 +156,26 @@ public class ReadExcelFile {
                             switch(currentCell.getCellType()) {
                                 case STRING:
                                     // System.out.print(currentCell.getStringCellValue() + "\t\t");
-                                    out.write((currentCell.getStringCellValue() + "\t\t").getBytes());
+                                    bw.write((currentCell.getStringCellValue() + "\t\t"));
                                     break;
                                 case NUMERIC:
                                     // System.out.print(currentCell.getNumericCellValue() + "\t\t");
-                                    out.write((currentCell.getNumericCellValue() + "\t\t").getBytes());
+                                    bw.write((currentCell.getNumericCellValue() + "\t\t"));
                                     break;
                                 case BOOLEAN:
                                     // System.out.print(currentCell.getBooleanCellValue() + "\t\t");
-                                    out.write((currentCell.getBooleanCellValue() + "\t\t").getBytes());
+                                    bw.write((currentCell.getBooleanCellValue() + "\t\t"));
                                     break;
                                 default:
                                     break;
                             }
                         }
 
-                        out.write(("\n").getBytes());
+                        bw.write("\n");
                     }
                     System.out.println("GHI FILE HOÀN TẤT");
-                } catch(IOException fnfe) {
+                } catch(IOException ioe) {
                     System.out.println("Ghi file không thành công");
-                } finally {
-                    ;
                 }
             }   
         }
@@ -279,7 +281,7 @@ public class ReadExcelFile {
     /**
      * Open Directory contains documents
      */
-    public void open() {
+    public static void open() {
         File output = new File(PATH);
         Desktop desktop = Desktop.getDesktop();
         try {

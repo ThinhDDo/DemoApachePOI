@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -58,12 +59,18 @@ public class ReadWordFile {
     private static String foldername;
     
     /**
+     * Default Constructor
+     */
+    public ReadWordFile() {}
+    
+    /**
      * Constructor for creating: read file, picture file & create folder
      * @param filename 
      */
     public ReadWordFile(String path) {
         
         this.filename = path.substring(path.lastIndexOf('\\') + 1, path.length());
+        this.filename = filename;
         foldername = filename.substring(0, filename.lastIndexOf('.'));
         
         // Tạo đối tượng ghi/đọc file nội dung Workbook
@@ -113,7 +120,7 @@ public class ReadWordFile {
      */
     private static void readWordDoc() {
         
-        if(rfile.exists() && rfile.isFile()) {
+        if(rfile != null) {
             
             try {
                 
@@ -143,6 +150,8 @@ public class ReadWordFile {
                     System.out.println(ioe.toString() + ": ĐÓNG FILE THẤT BẠI");
                 }
             }
+        } else {
+            System.out.println("Cannot Read this file");
         }
     }
     
@@ -265,7 +274,7 @@ public class ReadWordFile {
     /**
      * Open Directory contains documents
      */
-    public void open() {
+    public static void open() {
         File output = new File(PATH);
         Desktop desktop = Desktop.getDesktop();
         try {

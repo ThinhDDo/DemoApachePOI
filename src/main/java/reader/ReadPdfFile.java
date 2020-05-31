@@ -34,13 +34,13 @@ public class ReadPdfFile {
     private static String filename;
     private static String foldername;
     private static PDFTextStripper stripper;
-    private static String folder;
     
     /**
      * Truyền vào đường dẫn + tên file được copy từ đường link trên Windows Explorer
      * @param path 
      */
     public ReadPdfFile(String path) {
+        
         BasicConfigurator.configure();
         
         filename = path.substring(path.lastIndexOf('\\') + 1, path.length());
@@ -84,11 +84,9 @@ public class ReadPdfFile {
                     new BufferedWriter(
                             new OutputStreamWriter(
                                     new FileOutputStream(wfile.getPath() + "\\" + foldername + ".txt"), "UTF-8"))) {
-                // stripper.writeText(pdf, bw); ~NOT WORKING~
                 bw.write(content);
             }
         } catch (IOException ex) {
-            
             System.out.println("LOAD FILE THẤT BẠI");
         }
     }
@@ -129,22 +127,27 @@ public class ReadPdfFile {
      * Ghi file ảnh ra thư mục
      */
     public void writePictures() {
+        
         PDPageTree list = pdf.getPages();
         for (PDPage page : list) {
+            
             PDResources pdResources = page.getResources();
             int i = 1;
             for (COSName name : pdResources.getXObjectNames()) {
+                
                 PDXObject o;
                 try {
-                    o = pdResources.getXObject(name);
                     
+                    o = pdResources.getXObject(name);
                     if (o instanceof PDImageXObject) {
+                        
                         PDImageXObject image = (PDImageXObject)o;
                         String picfilename = pfile.getPath() + "\\img-" + i + ".png";
                         ImageIO.write(image.getImage(), "png", new File(picfilename));
                         i++;
                     }
                 } catch (IOException ex) {
+                    
                     System.out.println("LỖI PDXObject");
                 }
             }
@@ -155,12 +158,15 @@ public class ReadPdfFile {
     /**
      * Open Directory contains documents
      */
-    public void open() {
+    public static void open() {
+        
         File output = new File(PATH);
         Desktop desktop = Desktop.getDesktop();
         try {
+            
             desktop.open(output);
         } catch (IOException ex) {
+            
             System.out.println("KHÔNG MỞ ĐƯỢC THƯ MỤC");
         }
     }
